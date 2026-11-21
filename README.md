@@ -1,13 +1,13 @@
 # Questões Rápidas (React Native)
 
 Questões de **Certo ou Errado** no estilo Cebraspe para Android, feita em React Native
-com Expo (SDK 58). Equivalente ao [questoes-rapidas](https://github.com/jooemanoel/questoes-rapidas)
+com Expo (SDK 58). Equivalente ao [questoes-rapidas-web](https://github.com/jooemanoel/questoes-rapidas-web)
 (Vue/PWA): usa a mesma API ([questoes-rapidas-api](https://github.com/jooemanoel/questoes-rapidas-api)),
 as mesmas regras de sessão e de histórico e as mesmas cores.
 
 ## Instalação
 
-Baixe o APK da [última release](https://github.com/jooemanoel/questoes-rapidas-rn/releases/latest)
+Baixe o APK da [última release](https://github.com/jooemanoel/questoes-rapidas-mobile/releases/latest)
 direto no celular e abra o arquivo. Requer Android 7.0 ou superior.
 
 ## Comandos
@@ -43,7 +43,7 @@ O perfil `production` do [eas.json](eas.json) gera `.aab` para a Play Store.
 
 ### Opção 2: local (precisa do Android SDK)
 
-Os requisitos são os mesmos do [biblia-simples-rn](https://github.com/jooemanoel/biblia-simples-rn#op%C3%A7%C3%A3o-2--local-precisa-do-android-sdk):
+Os requisitos são os mesmos do [biblia-simples-mobile](https://github.com/jooemanoel/biblia-simples-mobile#op%C3%A7%C3%A3o-2--local-precisa-do-android-sdk):
 JDK 17 a 21, Android SDK com `cmake/3.31.6` e caminhos longos ativos no Windows.
 
 ```bash
@@ -55,7 +55,7 @@ O `prebuild --clean` apaga e recria a pasta `android/` a partir do [app.json](ap
 (ela não é versionada: não edite à mão), então copie o APK para outro lugar antes de gerar
 outro. Sem uma chave própria, o release local é assinado com a chave de depuração: serve
 para instalar no seu celular, não para publicar na loja. O plugin
-[plugins/cmake-recente.js](plugins/cmake-recente.js) é o mesmo do biblia-simples-rn.
+[plugins/cmake-recente.js](plugins/cmake-recente.js) é o mesmo do biblia-simples-mobile.
 
 ## Estrutura
 

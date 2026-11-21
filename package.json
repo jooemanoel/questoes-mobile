@@ -1,0 +1,31 @@
+{
+  "name": "questoes-rapidas-rn",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "description": "Questões de Certo ou Errado no estilo Cebraspe, em React Native (Expo), para Android",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo run:android",
+    "icones": "node scripts/icones.js",
+    "apk": "npx eas-cli@latest build -p android --profile apk",
+    "apk:local": "npx expo prebuild -p android --clean && cd android && .\\gradlew.bat assembleRelease",
+    "lint": "eslint App.js src scripts"
+  },
+  "dependencies": {
+    "expo": "~58.0.26",
+    "expo-splash-screen": "~58.0.14",
+    "expo-sqlite": "~58.0.18",
+    "expo-status-bar": "~58.0.5",
+    "expo-system-ui": "~58.0.7",
+    "react": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-safe-area-context": "~5.11.1"
+  },
+  "devDependencies": {
+    "eslint": "^9.0.0",
+    "eslint-config-expo": "~58.0.4",
+    "globals": "^17.14.0",
+    "sharp": "^0.35.5"
+  }
+}

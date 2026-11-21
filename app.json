@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Questões Rápidas",
+    "slug": "questoes-rapidas",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#f6f7f9",
+    "ios": {
+      "bundleIdentifier": "com.jooemanoel.questoesrapidas"
+    },
+    "android": {
+      "package": "com.jooemanoel.questoesrapidas",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#2f5bd3",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 160,
+          "backgroundColor": "#2f5bd3",
+          "dark": {
+            "image": "./assets/splash-icon.png",
+            "backgroundColor": "#14161a"
+          }
+        }
+      ],
+      "expo-sqlite",
+      ["./plugins/cmake-recente", { "versao": "3.31.6" }]
+    ]
+  }
+}

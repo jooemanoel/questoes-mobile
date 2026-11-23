@@ -8,7 +8,7 @@ import { gravarLocal, lerLocal } from "./armazenamento";
 const CHAVE_QUESTOES = "questoes-v1";
 
 // Defina EXPO_PUBLIC_API_URL (ver .env.example) para usar outra API.
-const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://questoes-rapidas-api.vercel.app";
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "https://questoes-api.vercel.app";
 
 // Sem limite de tempo, uma rede ruim deixaria o app em "Carregando…" para sempre.
 const TEMPO_LIMITE_MS = 15000;

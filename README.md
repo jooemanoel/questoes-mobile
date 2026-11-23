@@ -1,13 +1,13 @@
-# Questões Rápidas (React Native)
+# Questões (React Native)
 
 Questões de **Certo ou Errado** no estilo Cebraspe para Android, feita em React Native
-com Expo (SDK 58). Equivalente ao [questoes-rapidas-web](https://github.com/jooemanoel/questoes-rapidas-web)
-(Vue/PWA): usa a mesma API ([questoes-rapidas-api](https://github.com/jooemanoel/questoes-rapidas-api)),
+com Expo (SDK 58). Equivalente ao [questoes-web](https://github.com/jooemanoel/questoes-web)
+(Vue/PWA): usa a mesma API ([questoes-api](https://github.com/jooemanoel/questoes-api)),
 as mesmas regras de sessão e de histórico e as mesmas cores.
 
 ## Instalação
 
-Baixe o APK da [última release](https://github.com/jooemanoel/questoes-rapidas-mobile/releases/latest)
+Baixe o APK da [última release](https://github.com/jooemanoel/questoes-mobile/releases/latest)
 direto no celular e abra o arquivo. Requer Android 7.0 ou superior.
 
 ## Comandos
@@ -22,7 +22,7 @@ npm run icones     # regera os ícones e a splash em assets/
 
 ### API
 
-Por padrão o app usa a API publicada (`https://questoes-rapidas-api.vercel.app`). Para
+Por padrão o app usa a API publicada (`https://questoes-api.vercel.app`). Para
 usar outra (por exemplo, a API rodando no seu computador), copie o
 [.env.example](.env.example) para `.env.local` e ajuste `EXPO_PUBLIC_API_URL`. No emulador
 Android, o `localhost` do computador é `10.0.2.2`; num celular, use o IP do computador na

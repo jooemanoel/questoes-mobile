@@ -78,7 +78,7 @@ function Questionario() {
       >
         <View style={e.cabecalho}>
           <Text style={e.titulo} accessibilityRole="header">
-            Questões Rápidas
+            Questões
           </Text>
           {emSessao && <PlacarSessao acertos={q.acertos} erros={q.erros} notaLiquida={q.notaLiquida} />}
         </View>

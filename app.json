@@ -1,18 +1,18 @@
 {
   "expo": {
-    "name": "Questões Rápidas",
-    "slug": "questoes-rapidas",
-    "version": "1.0.0",
+    "name": "Questões",
+    "slug": "questoes",
+    "version": "1.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "backgroundColor": "#f6f7f9",
     "ios": {
-      "bundleIdentifier": "com.jooemanoel.questoesrapidas"
+      "bundleIdentifier": "com.jooemanoel.questoes"
     },
     "android": {
-      "package": "com.jooemanoel.questoesrapidas",
-      "versionCode": 1,
+      "package": "com.jooemanoel.questoes",
+      "versionCode": 2,
       "adaptiveIcon": {
         "backgroundColor": "#2f5bd3",
         "foregroundImage": "./assets/android-icon-foreground.png",

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Questões",
     "slug": "questoes",
-    "version": "1.1.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -12,7 +12,7 @@
     },
     "android": {
       "package": "com.jooemanoel.questoes",
-      "versionCode": 2,
+      "versionCode": 3,
       "adaptiveIcon": {
         "backgroundColor": "#2f5bd3",
         "foregroundImage": "./assets/android-icon-foreground.png",

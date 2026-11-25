@@ -3,8 +3,10 @@
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useEstilos } from "../estilos";
 
-export default function QuestaoItem({ questao, topico, respostaDada, bloqueada, aoResponder }) {
+// historico: histórico desta questão antes da resposta atual ({ vezes, acertos, ultima } ou null)
+export default function QuestaoItem({ questao, topico, historico, respostaDada, bloqueada, aoResponder }) {
   const { e } = useEstilos();
+  const avisoJaRespondida = textoJaRespondida(historico);
 
   return (
     <View style={e.cartao}>
@@ -14,6 +16,8 @@ export default function QuestaoItem({ questao, topico, respostaDada, bloqueada, 
           <Text style={e.negrito}>{topico.id}</Text> {topico.titulo}
         </Text>
       )}
+
+      {!!avisoJaRespondida && <Text style={e.jaRespondida}>{avisoJaRespondida}</Text>}
 
       {!questao.revisada && (
         <Text style={e.naoRevisada}>
@@ -46,6 +50,15 @@ export default function QuestaoItem({ questao, topico, respostaDada, bloqueada, 
       </View>
     </View>
   );
+}
+
+/** Ex.: "Você já respondeu esta questão 2 vezes (1 acerto), a última em 20/11/2026." */
+function textoJaRespondida(h) {
+  if (!h?.vezes) return "";
+  const vezes = h.vezes === 1 ? "1 vez" : `${h.vezes} vezes`;
+  const acertos = h.acertos === 1 ? "1 acerto" : `${h.acertos} acertos`;
+  const data = h.ultima ? `, a última em ${new Date(h.ultima).toLocaleDateString("pt-BR")}` : "";
+  return `Você já respondeu esta questão ${vezes} (${acertos})${data}.`;
 }
 
 function Opcao({ rotulo, valor, respostaDada, bloqueada, aoResponder, e }) {

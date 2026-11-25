@@ -2,15 +2,13 @@
 import { Text, View } from "react-native";
 import { useEstilos } from "../estilos";
 
-export default function PlacarSessao({ acertos, erros, notaLiquida }) {
+export default function PlacarSessao({ acertos, erros }) {
   const { cores, e } = useEstilos();
 
   return (
     <View style={e.placar}>
       <Item rotulo="Acertos" valor={acertos} cor={cores.certo} e={e} />
       <Item rotulo="Erros" valor={erros} cor={cores.errado} e={e} />
-      {/* Acertos menos erros, como no Cebraspe */}
-      <Item rotulo="Nota líquida" valor={notaLiquida} e={e} />
     </View>
   );
 }

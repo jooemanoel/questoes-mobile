@@ -36,15 +36,20 @@ export function useQuestionario() {
   // Questões já respondidas neste aparelho: { id: { vezes, acertos, ultima } }
   const [historico, setHistorico] = useState(lerHistorico);
 
+  // Quantas questões da sessão já tinham sido respondidas quando ela começou.
+  const [respondidasNaSessao, setRespondidasNaSessao] = useState(0);
+
+  // Histórico da questão atual como estava ANTES de respondê-la agora
+  // (null = nunca respondida). É guardado ao exibir a questão, para que a
+  // resposta dada nesta sessão não altere o aviso.
+  const [historicoQuestaoAtual, setHistoricoQuestaoAtual] = useState(null);
+
   // ---------- Valores derivados ----------
   const topicosPorId = useMemo(() => new Map(topicos.map((t) => [t.id, t])), [topicos]);
 
   const questaoAtual = questoes[indiceAtual];
   const acertou = respostaDada !== null && respostaDada === questaoAtual?.gabarito;
   const ehUltimaQuestao = indiceAtual === questoes.length - 1;
-
-  // No Cebraspe, cada erro anula um acerto.
-  const notaLiquida = acertos - erros;
 
   /** Quantas das questões existentes já foram respondidas ao menos uma vez. */
   const totalRespondidas = useMemo(
@@ -126,6 +131,8 @@ export function useQuestionario() {
     );
     setFiltroAtual(idTopico);
     setQuestoes(lista);
+    setRespondidasNaSessao(lista.filter((q) => historico[q.id]).length);
+    setHistoricoQuestaoAtual(historicoDe(lista[0]));
     setIndiceAtual(0);
     setRespostaDada(null);
     setAcertos(0);
@@ -153,9 +160,15 @@ export function useQuestionario() {
       return;
     }
 
-    setIndiceAtual((i) => i + 1);
+    setIndiceAtual(indiceAtual + 1);
     setRespostaDada(null);
+    setHistoricoQuestaoAtual(historicoDe(questoes[indiceAtual + 1]));
     setEtapa("respondendo");
+  }
+
+  /** Histórico salvo de uma questão (null = nunca respondida). */
+  function historicoDe(questao) {
+    return (questao && historico[questao.id]) || null;
   }
 
   /** Repete a mesma disciplina, em nova ordem. */
@@ -186,8 +199,9 @@ export function useQuestionario() {
     ehUltimaQuestao,
     acertos,
     erros,
-    notaLiquida,
     totalRespondidas,
+    respondidasNaSessao,
+    historicoQuestaoAtual,
     topicoAtual,
     opcoesDeEstudo,
     rotuloFiltro,

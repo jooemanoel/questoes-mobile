@@ -80,7 +80,7 @@ function Questionario() {
           <Text style={e.titulo} accessibilityRole="header">
             Questões
           </Text>
-          {emSessao && <PlacarSessao acertos={q.acertos} erros={q.erros} notaLiquida={q.notaLiquida} />}
+          {emSessao && <PlacarSessao acertos={q.acertos} erros={q.erros} />}
         </View>
 
         {/* Cada bloco abaixo corresponde a uma etapa do questionário */}
@@ -126,9 +126,19 @@ function Questionario() {
               <Botao tipo="link" titulo="Trocar disciplina" aoTocar={trocarDisciplina} />
             </View>
 
+            {q.respondidasNaSessao > 0 && (
+              <Text style={[e.detalhe, e.historico]}>
+                Você já respondeu {q.respondidasNaSessao} de {q.questoes.length} questões.{" "}
+                {q.respondidasNaSessao < q.questoes.length
+                  ? "As ainda não respondidas aparecem primeiro."
+                  : "As respondidas menos vezes aparecem primeiro."}
+              </Text>
+            )}
+
             <QuestaoItem
               questao={q.questaoAtual}
               topico={q.topicoAtual}
+              historico={q.historicoQuestaoAtual}
               respostaDada={q.respostaDada}
               bloqueada={etapa === "corrigida"}
               aoResponder={q.responder}
@@ -152,8 +162,7 @@ function Questionario() {
             <Text style={e.subtitulo}>Sessão concluída</Text>
             <Text style={e.detalhe}>{q.rotuloFiltro}</Text>
             <Text style={e.texto}>
-              Você respondeu {q.questoes.length} questões: {q.acertos} acertos e {q.erros} erros (nota
-              líquida {q.notaLiquida}).
+              Você respondeu {q.questoes.length} questões: {q.acertos} acertos e {q.erros} erros.
             </Text>
             <View style={[e.acoes, { marginTop: 4 }]}>
               <Botao titulo="Recomeçar" aoTocar={q.recomecar} />

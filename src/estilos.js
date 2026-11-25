@@ -87,6 +87,15 @@ function criarEstilos(c) {
     cartao,
     progresso: { color: c.textoSuave, fontSize: 14, flexShrink: 1 },
     topico: { color: c.textoSuave, fontSize: 13.5, lineHeight: 20, marginBottom: 12 },
+    jaRespondida: {
+      color: c.textoSuave,
+      fontSize: 13,
+      lineHeight: 19,
+      borderLeftWidth: 3,
+      borderLeftColor: c.borda,
+      paddingLeft: 8,
+      marginBottom: 12,
+    },
     naoRevisada: {
       color: c.textoSuave,
       fontSize: 13,

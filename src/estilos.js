@@ -192,6 +192,37 @@ function criarEstilos(c) {
       marginBottom: 12,
     },
     naProva: { color: c.textoSuave, fontSize: 13, marginTop: 2 },
+
+    // Chave "Responder na tela | Imprimir caderno"
+    modo: {
+      flexDirection: "row",
+      alignSelf: "flex-start",
+      borderWidth: 1,
+      borderColor: c.borda,
+      borderRadius: 8,
+      overflow: "hidden",
+      marginBottom: 8,
+    },
+    modoOpcao: { paddingVertical: 9, paddingHorizontal: 14, backgroundColor: c.superficie },
+    modoOpcaoSeguinte: { borderLeftWidth: 1, borderLeftColor: c.borda },
+    modoOpcaoAtiva: { backgroundColor: c.destaque },
+    modoTexto: { color: c.texto, fontSize: 14.5 },
+    modoTextoAtivo: { color: c.sobreDestaque, fontWeight: "600" },
+
+    // ---------- Caderno para imprimir ----------
+    quantidades: { flexDirection: "row", flexWrap: "wrap", gap: 8, marginTop: 8 },
+    quantidade: {
+      borderWidth: 1,
+      borderColor: c.borda,
+      borderRadius: 999,
+      paddingVertical: 6,
+      paddingHorizontal: 14,
+      backgroundColor: c.superficie,
+    },
+    quantidadeAtiva: { borderColor: c.destaque, backgroundColor: c.destaque },
+    quantidadeTexto: { color: c.texto, fontSize: 14 },
+    quantidadeTextoAtivo: { color: c.sobreDestaque, fontWeight: "600" },
+    resumoLinha: { flexDirection: "row", justifyContent: "space-between", gap: 12, paddingVertical: 4 },
     historico: { marginBottom: 6 },
     grupo: { marginTop: 16 },
     disciplinas: { paddingLeft: 12 },
@@ -237,6 +268,7 @@ function criarEstilos(c) {
     // ---------- Avisos ----------
     aviso: { ...cartao, gap: 12 },
     avisoErro: { borderColor: c.errado },
+    avisoAtualizacao: { borderColor: c.destaque, marginBottom: 16 },
     detalhe: { color: c.textoSuave, fontSize: 14, lineHeight: 21 },
     carregando: { flexDirection: "row", alignItems: "center", gap: 12 },
   });

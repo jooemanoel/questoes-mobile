@@ -11,6 +11,22 @@ as mesmas regras de sessão e de histórico e as mesmas cores.
 Baixe o APK da [última release](https://github.com/jooemanoel/questoes-mobile/releases/latest)
 direto no celular e abra o arquivo. Requer Android 7.0 ou superior.
 
+A partir da 1.4.0, o app consulta a release marcada como *Latest* (no máximo uma vez por dia)
+e avisa quando há versão nova, com um botão para baixar o APK. Por isso, cada versão nova
+precisa ser publicada como release com o `.apk` anexado e a tag `vX.Y.Z` igual ao
+`version` do [app.json](app.json).
+
+## Simulado e caderno para imprimir
+
+- **Simulado da prova:** nos concursos com `distribuicao` no `concurso.json` (hoje, o MS),
+  sorteia as questões na proporção da prova. Pode ser respondido na tela ou impresso.
+- **Imprimir caderno:** na tela inicial do concurso, a chave "Imprimir caderno" faz a
+  disciplina escolhida (ou o simulado) abrir a montagem do caderno. O caderno é um HTML
+  ([src/servicos/caderno.js](src/servicos/caderno.js)) que o `expo-print` manda para a
+  impressão do Android, com prévia e a opção "Salvar como PDF". As questões vêm numeradas e
+  agrupadas por disciplina; o gabarito e os comentários ficam no final, em página nova.
+  O layout é o mesmo do caderno do questoes-web.
+
 ## Comandos
 
 ```bash
@@ -65,8 +81,11 @@ App.js                            tela única: cabeçalho, etapas e rolagem
 src/estado/useQuestionario.js     estado e regras da sessão (= composable da versão Vue)
 src/servicos/api.js               acesso à API e cópia local das questões
 src/servicos/historico.js         questões já respondidas
+src/servicos/selecao.js           sorteio, simulado e agrupamento (igual ao do questoes-web)
+src/servicos/caderno.js           HTML do caderno para imprimir
+src/servicos/atualizacao.js       aviso de versão nova (release Latest do GitHub)
 src/servicos/armazenamento.js     gravação no aparelho (expo-sqlite/kv-store)
-src/componentes/                  escolha do concurso e da disciplina, questão, crítica, placar, botão
+src/componentes/                  escolha do concurso e da disciplina, questão, crítica, placar, botão, caderno
 src/estilos.js                    cores e estilos (equivale ao estilo.css)
 ```
 
@@ -80,3 +99,5 @@ src/estilos.js                    cores e estilos (equivale ao estilo.css)
 | Atalhos | `C`/`E` (ou `A` a `E` na múltipla escolha) e `Enter` no teclado | botão "voltar" do Android volta à escolha da disciplina (ou ao concurso, na lista de concursos) |
 | Rolagem | página inteira | volta ao topo a cada questão e desce até a crítica ao responder |
 | Rede | sem limite de tempo | desiste após 15 s, com mensagem de erro clara |
+| Caderno para imprimir | prévia na página e `window.print()` | resumo na tela; prévia e "Salvar como PDF" na impressão do Android (`expo-print`) |
+| Versão nova | o service worker atualiza sozinho | aviso no topo, com link para o APK da última release |

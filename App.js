@@ -1,16 +1,18 @@
 // Componente raiz: liga o estado (hook useQuestionario) aos componentes de tela.
 import { StatusBar } from "expo-status-bar";
 import * as SystemUI from "expo-system-ui";
-import { useEffect, useRef } from "react";
-import { ActivityIndicator, BackHandler, ScrollView, Text, View } from "react-native";
+import { useEffect, useRef, useState } from "react";
+import { ActivityIndicator, BackHandler, Linking, ScrollView, Text, View } from "react-native";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import Botao from "./src/componentes/Botao";
+import CadernoImpressao from "./src/componentes/CadernoImpressao";
 import CriticaQuestao from "./src/componentes/CriticaQuestao";
 import EscolhaConcurso from "./src/componentes/EscolhaConcurso";
 import EscolhaDisciplina from "./src/componentes/EscolhaDisciplina";
 import PlacarSessao from "./src/componentes/PlacarSessao";
 import QuestaoItem from "./src/componentes/QuestaoItem";
-import { useQuestionario } from "./src/estado/useQuestionario";
+import { VERSAO_INSTALADA, verificarAtualizacao } from "./src/servicos/atualizacao";
+import { MAXIMO_NO_CADERNO, useQuestionario } from "./src/estado/useQuestionario";
 import { useEstilos } from "./src/estilos";
 
 export default function App() {
@@ -26,6 +28,15 @@ function Questionario() {
   const { etapa, carregar, trocarDisciplina } = q;
   const { cores, e } = useEstilos();
   const margens = useSafeAreaInsets();
+  // Tela inicial do concurso: "responder" na tela ou "imprimir" um caderno.
+  // Fica aqui para não voltar a "responder" a cada caderno impresso.
+  const [modoEscolha, setModoEscolha] = useState("responder");
+  // Versão nova publicada no GitHub ({ versao, url }) ou null. "Depois" esconde até reabrir o app.
+  const [atualizacao, setAtualizacao] = useState(null);
+
+  useEffect(() => {
+    verificarAtualizacao().then(setAtualizacao);
+  }, []);
 
   // Rolagem: volta ao topo a cada nova tela/questão e desce até a crítica ao responder.
   const rolagem = useRef(null);
@@ -49,7 +60,7 @@ function Questionario() {
   // volta ao concurso que já estava carregado. Na tela inicial, fecha o app normalmente.
   useEffect(() => {
     const emTelaInterna =
-      ["respondendo", "corrigida", "fim", "vazio"].includes(etapa) ||
+      ["respondendo", "corrigida", "fim", "vazio", "imprimindo"].includes(etapa) ||
       (etapa === "escolhendo-concurso" && q.concursoCarregado);
     if (!emTelaInterna) return;
     const assinatura = BackHandler.addEventListener("hardwareBackPress", () => {
@@ -90,6 +101,19 @@ function Questionario() {
           {emSessao && <PlacarSessao acertos={q.acertos} erros={q.erros} />}
         </View>
 
+        {atualizacao && (
+          <View style={[e.aviso, e.avisoAtualizacao]}>
+            <Text style={e.texto}>
+              <Text style={e.negrito}>Versão {atualizacao.versao} disponível.</Text> Você está com a{" "}
+              {VERSAO_INSTALADA}. Baixe o APK e toque nele para instalar por cima; o histórico é mantido.
+            </Text>
+            <View style={[e.acoes, { marginTop: 0 }]}>
+              <Botao titulo="Baixar a nova versão" aoTocar={() => Linking.openURL(atualizacao.url)} />
+              <Botao tipo="secundario" titulo="Depois" aoTocar={() => setAtualizacao(null)} />
+            </View>
+          </View>
+        )}
+
         {/* Cada bloco abaixo corresponde a uma etapa do questionário */}
 
         {etapa === "carregando" && (
@@ -120,9 +144,25 @@ function Questionario() {
             grupos={q.opcoesDeEstudo}
             totalGeral={q.todasQuestoes.length}
             totalRespondidas={q.totalRespondidas}
+            totalSimulado={q.totalSimulado}
+            modo={modoEscolha}
+            aoMudarModo={setModoEscolha}
             aoEscolher={q.iniciar}
+            aoImprimir={q.abrirImpressao}
             aoApagarHistorico={q.apagarHistorico}
             aoTrocarConcurso={q.trocarConcurso}
+          />
+        )}
+
+        {etapa === "imprimindo" && q.caderno && (
+          <CadernoImpressao
+            concurso={q.concurso}
+            caderno={q.caderno}
+            topicos={q.topicos}
+            rotulo={q.rotuloDe(q.caderno.idTopico)}
+            maximo={MAXIMO_NO_CADERNO}
+            aoSortear={q.sortearCaderno}
+            aoVoltar={trocarDisciplina}
           />
         )}
 

@@ -3,9 +3,18 @@ import { Text, View } from "react-native";
 import { useEstilos } from "../estilos";
 import Botao from "./Botao";
 
-export default function CriticaQuestao({ acertou, gabarito, comentario, ehUltimaQuestao, aoAvancar, onLayout }) {
+export default function CriticaQuestao({
+  acertou,
+  gabarito,
+  multiplaEscolha,
+  comentario,
+  ehUltimaQuestao,
+  aoAvancar,
+  onLayout,
+}) {
   const { cores, e } = useEstilos();
-  const gabaritoPorExtenso = gabarito === "C" ? "Certo" : "Errado";
+  // Na múltipla escolha, "C" é a alternativa C, não "Certo".
+  const gabaritoPorExtenso = multiplaEscolha ? `alternativa ${gabarito}` : gabarito === "C" ? "Certo" : "Errado";
 
   return (
     <View

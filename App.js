@@ -6,6 +6,7 @@ import { ActivityIndicator, BackHandler, ScrollView, Text, View } from "react-na
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import Botao from "./src/componentes/Botao";
 import CriticaQuestao from "./src/componentes/CriticaQuestao";
+import EscolhaConcurso from "./src/componentes/EscolhaConcurso";
 import EscolhaDisciplina from "./src/componentes/EscolhaDisciplina";
 import PlacarSessao from "./src/componentes/PlacarSessao";
 import QuestaoItem from "./src/componentes/QuestaoItem";
@@ -44,16 +45,19 @@ function Questionario() {
   }, [etapa, q.indiceAtual]);
 
   // Botão "voltar" do Android: durante a sessão, volta à escolha da disciplina
-  // (como "Trocar disciplina"); na tela inicial, fecha o app normalmente.
+  // (como "Trocar disciplina"). Na lista de concursos aberta por "Trocar concurso",
+  // volta ao concurso que já estava carregado. Na tela inicial, fecha o app normalmente.
   useEffect(() => {
-    const emTelaInterna = ["respondendo", "corrigida", "fim", "vazio"].includes(etapa);
+    const emTelaInterna =
+      ["respondendo", "corrigida", "fim", "vazio"].includes(etapa) ||
+      (etapa === "escolhendo-concurso" && q.concursoCarregado);
     if (!emTelaInterna) return;
     const assinatura = BackHandler.addEventListener("hardwareBackPress", () => {
       trocarDisciplina();
       return true;
     });
     return () => assinatura.remove();
-  }, [etapa, trocarDisciplina]);
+  }, [etapa, trocarDisciplina, q.concursoCarregado]);
 
   /** Se a crítica ficou abaixo da parte visível, rola até ela. */
   function mostrarCritica(evento) {
@@ -77,9 +81,12 @@ function Questionario() {
         scrollEventThrottle={100}
       >
         <View style={e.cabecalho}>
-          <Text style={e.titulo} accessibilityRole="header">
-            Questões
-          </Text>
+          <View style={{ flexShrink: 1 }}>
+            <Text style={e.titulo} accessibilityRole="header">
+              Questões
+            </Text>
+            {q.concurso && etapa !== "escolhendo-concurso" && <Text style={e.nomeConcurso}>{q.concurso.nome}</Text>}
+          </View>
           {emSessao && <PlacarSessao acertos={q.acertos} erros={q.erros} />}
         </View>
 
@@ -96,17 +103,26 @@ function Questionario() {
           <View style={[e.aviso, e.avisoErro]}>
             <Text style={e.texto}>Não foi possível carregar as questões.</Text>
             <Text style={e.detalhe}>{q.mensagemErro}</Text>
-            <Botao titulo="Tentar de novo" aoTocar={carregar} />
+            <View style={e.acoes}>
+              <Botao titulo="Tentar de novo" aoTocar={carregar} />
+              {q.podeTrocarConcurso && <Botao tipo="secundario" titulo="Trocar concurso" aoTocar={q.trocarConcurso} />}
+            </View>
           </View>
+        )}
+
+        {etapa === "escolhendo-concurso" && (
+          <EscolhaConcurso concursos={q.concursos} idAtual={q.concurso?.id ?? null} aoEscolher={q.abrirConcurso} />
         )}
 
         {etapa === "escolhendo" && (
           <EscolhaDisciplina
+            podeTrocarConcurso={q.podeTrocarConcurso}
             grupos={q.opcoesDeEstudo}
             totalGeral={q.todasQuestoes.length}
             totalRespondidas={q.totalRespondidas}
             aoEscolher={q.iniciar}
             aoApagarHistorico={q.apagarHistorico}
+            aoTrocarConcurso={q.trocarConcurso}
           />
         )}
 
@@ -148,6 +164,7 @@ function Questionario() {
               <CriticaQuestao
                 acertou={q.acertou}
                 gabarito={q.questaoAtual.gabarito}
+                multiplaEscolha={(q.questaoAtual.alternativas?.length ?? 0) > 0}
                 comentario={q.questaoAtual.comentario}
                 ehUltimaQuestao={q.ehUltimaQuestao}
                 aoAvancar={q.proxima}

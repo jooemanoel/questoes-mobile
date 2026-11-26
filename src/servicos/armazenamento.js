@@ -15,11 +15,14 @@ export function lerLocal(chave) {
   }
 }
 
+/** Devolve true se gravou. */
 export function gravarLocal(chave, valor) {
   try {
     Storage.setItemSync(PREFIXO + chave, JSON.stringify(valor));
+    return true;
   } catch (erro) {
     console.warn(`Não foi possível salvar "${chave}" no aparelho:`, erro);
+    return false;
   }
 }
 

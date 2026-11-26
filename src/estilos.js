@@ -76,6 +76,7 @@ function criarEstilos(c) {
       marginBottom: 20,
     },
     titulo: { color: c.texto, fontSize: 22, fontWeight: "700" },
+    nomeConcurso: { color: c.textoSuave, fontSize: 14, marginTop: 2 },
 
     // ---------- Placar ----------
     placar: { flexDirection: "row", gap: 20 },
@@ -126,6 +127,37 @@ function criarEstilos(c) {
     enunciado: { color: c.texto, fontSize: 17.5, lineHeight: 27, marginBottom: 20 },
     opcoes: { flexDirection: "row", gap: 12 },
 
+    // Múltipla escolha: uma alternativa por linha, com a letra numa bolinha
+    alternativas: { gap: 8 },
+    alternativa: {
+      flexDirection: "row",
+      alignItems: "flex-start",
+      gap: 12,
+      borderWidth: 2,
+      borderColor: c.borda,
+      borderRadius: 8,
+      backgroundColor: c.superficie,
+      paddingVertical: 10,
+      paddingHorizontal: 14,
+    },
+    alternativaPressionada: { borderColor: c.destaque },
+    alternativaLetra: {
+      width: 28,
+      height: 28,
+      borderRadius: 14,
+      borderWidth: 1,
+      borderColor: c.borda,
+      color: c.texto,
+      fontSize: 14,
+      fontWeight: "700",
+      textAlign: "center",
+      lineHeight: 26,
+      overflow: "hidden",
+    },
+    letraCerta: { borderColor: c.certo, color: c.certo },
+    letraErrada: { borderColor: c.errado, color: c.errado },
+    alternativaTexto: { color: c.texto, fontSize: 16, lineHeight: 24, flex: 1, paddingTop: 1 },
+
     // ---------- Botões ----------
     opcao: { ...botao, flex: 1, borderWidth: 2, borderColor: c.borda, backgroundColor: c.superficie, minHeight: 52 },
     opcaoCertoEscolhida: { borderColor: c.certo, backgroundColor: c.certoFundo },
@@ -150,6 +182,16 @@ function criarEstilos(c) {
 
     // ---------- Escolha da disciplina ----------
     subtitulo: { color: c.texto, fontSize: 18.5, fontWeight: "700", marginBottom: 12 },
+    tituloEscolha: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      justifyContent: "space-between",
+      alignItems: "baseline",
+      columnGap: 12,
+      rowGap: 4,
+      marginBottom: 12,
+    },
+    naProva: { color: c.textoSuave, fontSize: 13, marginTop: 2 },
     historico: { marginBottom: 6 },
     grupo: { marginTop: 16 },
     disciplinas: { paddingLeft: 12 },

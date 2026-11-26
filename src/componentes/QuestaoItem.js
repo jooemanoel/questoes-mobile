@@ -1,7 +1,9 @@
-// Mostra a questão e os botões Certo/Errado.
-// Não corrige nada: apenas avisa (aoResponder) a opção escolhida.
+// Mostra a questão e os botões de resposta: Certo/Errado ou, na múltipla escolha,
+// uma alternativa por botão. Não corrige nada: apenas avisa (aoResponder) a opção
+// escolhida ("C"/"E" ou a letra da alternativa).
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useEstilos } from "../estilos";
+import { letra } from "../servicos/api";
 
 // historico: histórico desta questão antes da resposta atual ({ vezes, acertos, ultima } ou null)
 export default function QuestaoItem({ questao, topico, historico, respostaDada, bloqueada, aoResponder }) {
@@ -44,11 +46,52 @@ export default function QuestaoItem({ questao, topico, historico, respostaDada, 
         {questao.enunciado}
       </Text>
 
-      <View style={e.opcoes}>
-        <Opcao rotulo="Certo" valor="C" {...{ respostaDada, bloqueada, aoResponder, e }} />
-        <Opcao rotulo="Errado" valor="E" {...{ respostaDada, bloqueada, aoResponder, e }} />
-      </View>
+      {questao.alternativas?.length ? (
+        <View style={e.alternativas}>
+          {questao.alternativas.map((texto, i) => (
+            <Alternativa
+              key={i}
+              valor={letra(i)}
+              texto={texto}
+              gabarito={questao.gabarito}
+              {...{ respostaDada, bloqueada, aoResponder, e }}
+            />
+          ))}
+        </View>
+      ) : (
+        <View style={e.opcoes}>
+          <Opcao rotulo="Certo" valor="C" {...{ respostaDada, bloqueada, aoResponder, e }} />
+          <Opcao rotulo="Errado" valor="E" {...{ respostaDada, bloqueada, aoResponder, e }} />
+        </View>
+      )}
     </View>
+  );
+}
+
+/** Depois de responder: a correta fica verde e a escolhida errada, vermelha. */
+function Alternativa({ valor, texto, gabarito, respostaDada, bloqueada, aoResponder, e }) {
+  const escolhida = respostaDada === valor;
+  const correta = bloqueada && valor === gabarito;
+  const incorreta = bloqueada && escolhida && valor !== gabarito;
+
+  return (
+    <Pressable
+      onPress={() => aoResponder(valor)}
+      disabled={bloqueada}
+      accessibilityRole="button"
+      accessibilityLabel={`Alternativa ${valor}: ${texto}`}
+      accessibilityState={{ disabled: bloqueada, selected: escolhida }}
+      style={({ pressed }) => [
+        e.alternativa,
+        pressed && e.alternativaPressionada,
+        correta && e.opcaoCertoEscolhida,
+        incorreta && e.opcaoErradoEscolhida,
+        bloqueada && !correta && !incorreta && e.opcaoApagada,
+      ]}
+    >
+      <Text style={[e.alternativaLetra, correta && e.letraCerta, incorreta && e.letraErrada]}>{valor}</Text>
+      <Text style={e.alternativaTexto}>{texto}</Text>
+    </Pressable>
   );
 }
 

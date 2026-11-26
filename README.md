@@ -1,7 +1,8 @@
 # Questões (React Native)
 
-Questões de **Certo ou Errado** no estilo Cebraspe para Android, feita em React Native
-com Expo (SDK 58). Equivalente ao [questoes-web](https://github.com/jooemanoel/questoes-web)
+Questões de concursos para Android, de **Certo ou Errado** (estilo Cebraspe) e de
+**múltipla escolha**, feita em React Native com Expo (SDK 58). Cada concurso tem seu edital,
+suas questões e seu próprio histórico de respostas. Equivalente ao [questoes-web](https://github.com/jooemanoel/questoes-web)
 (Vue/PWA): usa a mesma API ([questoes-api](https://github.com/jooemanoel/questoes-api)),
 as mesmas regras de sessão e de histórico e as mesmas cores.
 
@@ -65,7 +66,7 @@ src/estado/useQuestionario.js     estado e regras da sessão (= composable da ve
 src/servicos/api.js               acesso à API e cópia local das questões
 src/servicos/historico.js         questões já respondidas
 src/servicos/armazenamento.js     gravação no aparelho (expo-sqlite/kv-store)
-src/componentes/                  escolha da disciplina, questão, crítica, placar, botão
+src/componentes/                  escolha do concurso e da disciplina, questão, crítica, placar, botão
 src/estilos.js                    cores e estilos (equivale ao estilo.css)
 ```
 
@@ -74,8 +75,8 @@ src/estilos.js                    cores e estilos (equivale ao estilo.css)
 | | Vue (PWA) | React Native |
 |---|---|---|
 | Dados locais | `localStorage` | `expo-sqlite/kv-store` (mesmas chaves e formato) |
-| Tópicos do edital | cache do navegador / service worker | última cópia salva no aparelho: abre sem internet |
+| Concursos e tópicos do edital | cache do navegador / service worker | última cópia salva no aparelho: abre sem internet |
 | Confirmação | `confirm()` | `Alert` nativo |
-| Atalhos | `C`, `E` e `Enter` no teclado | botão "voltar" do Android volta à escolha da disciplina |
+| Atalhos | `C`/`E` (ou `A` a `E` na múltipla escolha) e `Enter` no teclado | botão "voltar" do Android volta à escolha da disciplina (ou ao concurso, na lista de concursos) |
 | Rolagem | página inteira | volta ao topo a cada questão e desce até a crítica ao responder |
 | Rede | sem limite de tempo | desiste após 15 s, com mensagem de erro clara |

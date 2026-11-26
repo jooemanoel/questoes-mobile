@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "private": true,
-  "description": "Questões de Certo ou Errado no estilo Cebraspe, em React Native (Expo), para Android",
+  "description": "Questões de concursos (Certo ou Errado e múltipla escolha), em React Native (Expo), para Android",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",

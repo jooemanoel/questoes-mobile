@@ -60,3 +60,52 @@ export async function verificarAtualizacao() {
     clearTimeout(temporizador);
   }
 }
+
+// ---------- baixar e instalar dentro do app ----------
+// Pelo navegador, o download do APK às vezes chega a 100% e não termina (o download
+// paralelo do Chromium com o redirecionamento do GitHub). O app baixa sozinho, por uma
+// conexão do próprio Android, e abre o instalador do sistema com o arquivo.
+// Na primeira vez, o Android pede para permitir "instalar apps desconhecidos" do Questões
+// (por isso a permissão REQUEST_INSTALL_PACKAGES no app.json).
+
+const PASTA_DOWNLOAD = "atualizacao"; // dentro do cache do app
+
+function pastaDownload() {
+  const { Directory, Paths } = require("expo-file-system");
+  return new Directory(Paths.cache, PASTA_DOWNLOAD);
+}
+
+/** Apaga APKs baixados antes (ficam no cache depois de instalados). */
+export function limparDownloads() {
+  try {
+    const pasta = pastaDownload();
+    if (pasta.exists) pasta.delete();
+  } catch {
+    // o cache é do sistema; se não der, ele limpa quando precisar
+  }
+}
+
+/**
+ * Baixa o APK da versão nova e abre o instalador do Android.
+ * aoProgresso recebe de 0 a 1 (ou null se o tamanho não for conhecido).
+ */
+export async function baixarEInstalar({ versao, url }, aoProgresso) {
+  const { File } = require("expo-file-system");
+  const { getContentUriAsync } = require("expo-file-system/legacy");
+  const { startActivityAsync } = require("expo-intent-launcher");
+
+  limparDownloads();
+  const pasta = pastaDownload();
+  pasta.create({ intermediates: true, idempotent: true });
+  const destino = new File(pasta, `questoes-${versao}.apk`);
+  const arquivo = await File.downloadFileAsync(url, destino, {
+    idempotent: true,
+    onProgress: ({ bytesWritten, totalBytes }) => aoProgresso?.(totalBytes > 0 ? bytesWritten / totalBytes : null),
+  });
+  const conteudo = await getContentUriAsync(arquivo.uri);
+  await startActivityAsync("android.intent.action.VIEW", {
+    data: conteudo,
+    type: "application/vnd.android.package-archive",
+    flags: 1, // FLAG_GRANT_READ_URI_PERMISSION: o instalador lê o arquivo do app
+  });
+}

@@ -2,8 +2,9 @@
 import { StatusBar } from "expo-status-bar";
 import * as SystemUI from "expo-system-ui";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, AppState, BackHandler, Linking, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, AppState, BackHandler, Platform, ScrollView, Text, View } from "react-native";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
+import AvisoAtualizacao from "./src/componentes/AvisoAtualizacao";
 import Botao from "./src/componentes/Botao";
 import CadernoImpressao from "./src/componentes/CadernoImpressao";
 import CriticaQuestao from "./src/componentes/CriticaQuestao";
@@ -11,7 +12,7 @@ import EscolhaConcurso from "./src/componentes/EscolhaConcurso";
 import EscolhaDisciplina from "./src/componentes/EscolhaDisciplina";
 import PlacarSessao from "./src/componentes/PlacarSessao";
 import QuestaoItem from "./src/componentes/QuestaoItem";
-import { VERSAO_INSTALADA, verificarAtualizacao } from "./src/servicos/atualizacao";
+import { limparDownloads, verificarAtualizacao } from "./src/servicos/atualizacao";
 import { MAXIMO_NO_CADERNO, useQuestionario } from "./src/estado/useQuestionario";
 import { useEstilos } from "./src/estilos";
 
@@ -37,7 +38,12 @@ function Questionario() {
   const [adiada, setAdiada] = useState(null);
 
   useEffect(() => {
-    const verificar = () => verificarAtualizacao().then(setAtualizacao);
+    const verificar = () =>
+      verificarAtualizacao().then((nova) => {
+        setAtualizacao(nova);
+        // Em dia: o APK baixado para a atualização (se houver) já foi instalado.
+        if (!nova && Platform.OS === "android") limparDownloads();
+      });
     verificar();
     const assinatura = AppState.addEventListener("change", (estado) => {
       if (estado === "active") verificar();
@@ -109,16 +115,7 @@ function Questionario() {
         </View>
 
         {atualizacao && atualizacao.versao !== adiada && (
-          <View style={[e.aviso, e.avisoAtualizacao]}>
-            <Text style={e.texto}>
-              <Text style={e.negrito}>Versão {atualizacao.versao} disponível.</Text> Você está com a{" "}
-              {VERSAO_INSTALADA}. Baixe o APK e toque nele para instalar por cima; o histórico é mantido.
-            </Text>
-            <View style={[e.acoes, { marginTop: 0 }]}>
-              <Botao titulo="Baixar a nova versão" aoTocar={() => Linking.openURL(atualizacao.url)} />
-              <Botao tipo="secundario" titulo="Depois" aoTocar={() => setAdiada(atualizacao.versao)} />
-            </View>
-          </View>
+          <AvisoAtualizacao atualizacao={atualizacao} aoAdiar={() => setAdiada(atualizacao.versao)} />
         )}
 
         {/* Cada bloco abaixo corresponde a uma etapa do questionário */}

@@ -12,7 +12,10 @@ Baixe o APK da [última release](https://github.com/jooemanoel/questoes-mobile/r
 direto no celular e abra o arquivo. Requer Android 7.0 ou superior.
 
 A partir da 1.4.0, o app consulta a release marcada como *Latest* (ao abrir e ao voltar para o app, no máximo uma vez por hora)
-e avisa quando há versão nova, com um botão para baixar o APK. Por isso, cada versão nova
+e avisa quando há versão nova. Desde a 1.4.1, o botão **Atualizar agora** baixa o APK dentro do app
+(sem passar pelo navegador, cujo download às vezes trava em 100%) e abre o instalador do Android;
+na primeira vez, o Android pede para permitir que o app instale apps (permissão
+`REQUEST_INSTALL_PACKAGES`). Se o download falhar, o botão abre o APK no navegador. Por isso, cada versão nova
 precisa ser publicada como release com o `.apk` anexado e a tag `vX.Y.Z` igual ao
 `version` do [app.json](app.json).
 

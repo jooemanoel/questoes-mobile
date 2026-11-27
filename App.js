@@ -2,7 +2,7 @@
 import { StatusBar } from "expo-status-bar";
 import * as SystemUI from "expo-system-ui";
 import { useEffect, useRef, useState } from "react";
-import { ActivityIndicator, BackHandler, Linking, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, AppState, BackHandler, Linking, ScrollView, Text, View } from "react-native";
 import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import Botao from "./src/componentes/Botao";
 import CadernoImpressao from "./src/componentes/CadernoImpressao";
@@ -31,11 +31,18 @@ function Questionario() {
   // Tela inicial do concurso: "responder" na tela ou "imprimir" um caderno.
   // Fica aqui para não voltar a "responder" a cada caderno impresso.
   const [modoEscolha, setModoEscolha] = useState("responder");
-  // Versão nova publicada no GitHub ({ versao, url }) ou null. "Depois" esconde até reabrir o app.
+  // Versão nova publicada no GitHub ({ versao, url }) ou null. Consulta ao abrir e ao voltar
+  // para o app; "Depois" esconde o aviso daquela versão até reabrir o app.
   const [atualizacao, setAtualizacao] = useState(null);
+  const [adiada, setAdiada] = useState(null);
 
   useEffect(() => {
-    verificarAtualizacao().then(setAtualizacao);
+    const verificar = () => verificarAtualizacao().then(setAtualizacao);
+    verificar();
+    const assinatura = AppState.addEventListener("change", (estado) => {
+      if (estado === "active") verificar();
+    });
+    return () => assinatura.remove();
   }, []);
 
   // Rolagem: volta ao topo a cada nova tela/questão e desce até a crítica ao responder.
@@ -101,7 +108,7 @@ function Questionario() {
           {emSessao && <PlacarSessao acertos={q.acertos} erros={q.erros} />}
         </View>
 
-        {atualizacao && (
+        {atualizacao && atualizacao.versao !== adiada && (
           <View style={[e.aviso, e.avisoAtualizacao]}>
             <Text style={e.texto}>
               <Text style={e.negrito}>Versão {atualizacao.versao} disponível.</Text> Você está com a{" "}
@@ -109,7 +116,7 @@ function Questionario() {
             </Text>
             <View style={[e.acoes, { marginTop: 0 }]}>
               <Botao titulo="Baixar a nova versão" aoTocar={() => Linking.openURL(atualizacao.url)} />
-              <Botao tipo="secundario" titulo="Depois" aoTocar={() => setAtualizacao(null)} />
+              <Botao tipo="secundario" titulo="Depois" aoTocar={() => setAdiada(atualizacao.versao)} />
             </View>
           </View>
         )}

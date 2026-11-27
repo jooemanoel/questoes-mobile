@@ -2,8 +2,8 @@
 // marcada como "Latest" em github.com/jooemanoel/questoes-mobile.
 //
 // A API do GitHub sem login aceita 60 consultas por hora por IP; o app consulta no
-// máximo uma vez por dia e guarda a resposta, então o aviso continua aparecendo
-// sem internet. Qualquer falha é silenciosa: o aviso é só uma conveniência.
+// máximo uma vez por hora (ao abrir e ao voltar para o app) e guarda a resposta,
+// então o aviso continua aparecendo sem internet. Qualquer falha é silenciosa: o aviso é só uma conveniência.
 import config from "../../app.json";
 import { gravarLocal, lerLocal } from "./armazenamento";
 
@@ -11,7 +11,8 @@ export const VERSAO_INSTALADA = config.expo.version;
 
 const URL_RELEASE = "https://api.github.com/repos/jooemanoel/questoes-mobile/releases/latest";
 const CHAVE = "atualizacao"; // { verificadoEm, versao, url }
-const UM_DIA_MS = 24 * 60 * 60 * 1000;
+// Uma hora: com um dia, quem abriu o app logo antes de uma release só via o aviso no dia seguinte.
+const INTERVALO_MS = 60 * 60 * 1000;
 const TEMPO_LIMITE_MS = 10000;
 
 /** Compara "1.10.0" com "1.9.2" número a número: > 0 se a for mais nova. */
@@ -33,11 +34,11 @@ function novaSeHouver(registro) {
 
 /**
  * Devolve { versao, url } da versão nova (url = o APK da release, ou a página dela),
- * ou null se o app está em dia. Usa a consulta guardada se ela tiver menos de um dia.
+ * ou null se o app está em dia. Usa a consulta guardada se ela tiver menos de uma hora.
  */
 export async function verificarAtualizacao() {
   const salvo = lerLocal(CHAVE);
-  if (salvo?.verificadoEm && Date.now() - salvo.verificadoEm < UM_DIA_MS) return novaSeHouver(salvo);
+  if (salvo?.verificadoEm && Date.now() - salvo.verificadoEm < INTERVALO_MS) return novaSeHouver(salvo);
 
   const controle = new AbortController();
   const temporizador = setTimeout(() => controle.abort(), TEMPO_LIMITE_MS);

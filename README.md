@@ -11,7 +11,7 @@ as mesmas regras de sessão e de histórico e as mesmas cores.
 Baixe o APK da [última release](https://github.com/jooemanoel/questoes-mobile/releases/latest)
 direto no celular e abra o arquivo. Requer Android 7.0 ou superior.
 
-A partir da 1.4.0, o app consulta a release marcada como *Latest* (no máximo uma vez por dia)
+A partir da 1.4.0, o app consulta a release marcada como *Latest* (ao abrir e ao voltar para o app, no máximo uma vez por hora)
 e avisa quando há versão nova, com um botão para baixar o APK. Por isso, cada versão nova
 precisa ser publicada como release com o `.apk` anexado e a tag `vX.Y.Z` igual ao
 `version` do [app.json](app.json).
